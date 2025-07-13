@@ -17,7 +17,7 @@ import {
 } from '@/components/ui/card';
 import { Product } from './product';
 import { SelectProduct } from '@/lib/db';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -31,15 +31,27 @@ export function ProductsTable({
   totalProducts: number;
 }) {
   let router = useRouter();
+  let searchParams = useSearchParams();
   let productsPerPage = 5;
+  let currentPage = Math.floor(offset / productsPerPage);
+  let totalPages = Math.ceil(totalProducts / productsPerPage);
 
   function prevPage() {
-    router.back();
+    const newOffset = Math.max(0, offset - productsPerPage);
+    const params = new URLSearchParams(searchParams);
+    params.set('offset', newOffset.toString());
+    router.push(`/?${params.toString()}`);
   }
 
   function nextPage() {
-    router.push(`/?offset=${offset}`, { scroll: false });
+    const newOffset = offset + productsPerPage;
+    const params = new URLSearchParams(searchParams);
+    params.set('offset', newOffset.toString());
+    router.push(`/?${params.toString()}`);
   }
+
+  const startItem = offset + 1;
+  const endItem = Math.min(offset + products.length, totalProducts);
 
   return (
     <Card>
@@ -76,37 +88,41 @@ export function ProductsTable({
         </Table>
       </CardContent>
       <CardFooter>
-        <form className="flex items-center w-full justify-between">
+        <div className="flex items-center w-full justify-between">
           <div className="text-xs text-muted-foreground">
-            Showing{' '}
-            <strong>
-              {Math.max(0, Math.min(offset - productsPerPage, totalProducts) + 1)}-{offset}
-            </strong>{' '}
-            of <strong>{totalProducts}</strong> products
+            {totalProducts > 0 ? (
+              <>
+                Showing{' '}
+                <strong>
+                  {startItem}-{endItem}
+                </strong>{' '}
+                of <strong>{totalProducts}</strong> products
+              </>
+            ) : (
+              <span>No products found</span>
+            )}
           </div>
-          <div className="flex">
+          <div className="flex gap-2">
             <Button
-              formAction={prevPage}
+              onClick={prevPage}
               variant="ghost"
               size="sm"
-              type="submit"
-              disabled={offset === productsPerPage}
+              disabled={offset === 0}
             >
               <ChevronLeft className="mr-2 h-4 w-4" />
               Prev
             </Button>
             <Button
-              formAction={nextPage}
+              onClick={nextPage}
               variant="ghost"
               size="sm"
-              type="submit"
-              disabled={offset + productsPerPage > totalProducts}
+              disabled={endItem >= totalProducts}
             >
               Next
               <ChevronRight className="ml-2 h-4 w-4" />
             </Button>
           </div>
-        </form>
+        </div>
       </CardFooter>
     </Card>
   );
