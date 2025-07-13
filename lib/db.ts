@@ -11,7 +11,7 @@ import {
   pgEnum,
   serial
 } from 'drizzle-orm/pg-core';
-import { count, eq, ilike, and } from 'drizzle-orm';
+import { count, eq, ilike, and, asc } from 'drizzle-orm';
 import { createInsertSchema } from 'drizzle-zod';
 
 export const db = drizzle(neon(process.env.POSTGRES_URL!));
@@ -51,6 +51,7 @@ export async function getProducts(
         .select()
         .from(products)
         .where(whereCondition)
+        .orderBy(asc(products.name))
         .limit(1000),
       newOffset: null,
       totalProducts: 0
@@ -69,12 +70,12 @@ export async function getProducts(
     totalProducts = await db.select({ count: count() }).from(products);
   }
 
-  // Get products with status filter
+  // Get products with status filter and sorting
   let moreProducts;
   if (status) {
-    moreProducts = await db.select().from(products).where(eq(products.status, status)).limit(5).offset(offset);
+    moreProducts = await db.select().from(products).where(eq(products.status, status)).orderBy(asc(products.name)).limit(5).offset(offset);
   } else {
-    moreProducts = await db.select().from(products).limit(5).offset(offset);
+    moreProducts = await db.select().from(products).orderBy(asc(products.name)).limit(5).offset(offset);
   }
   
   let newOffset = moreProducts.length >= 5 ? offset + 5 : null;
