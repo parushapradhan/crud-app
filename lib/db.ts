@@ -11,7 +11,7 @@ import {
   pgEnum,
   serial
 } from 'drizzle-orm/pg-core';
-import { count, eq, ilike } from 'drizzle-orm';
+import { count, eq, ilike, and } from 'drizzle-orm';
 import { createInsertSchema } from 'drizzle-zod';
 
 export const db = drizzle(neon(process.env.POSTGRES_URL!));
@@ -33,7 +33,8 @@ export const insertProductSchema = createInsertSchema(products);
 
 export async function getProducts(
   search: string,
-  offset: number
+  offset: number,
+  status?: 'active' | 'inactive' | 'archived'
 ): Promise<{
   products: SelectProduct[];
   newOffset: number | null;
@@ -41,11 +42,15 @@ export async function getProducts(
 }> {
   // Always search the full table, not per page
   if (search) {
+    const searchCondition = ilike(products.name, `%${search}%`);
+    const statusCondition = status ? eq(products.status, status) : undefined;
+    const whereCondition = statusCondition ? and(searchCondition, statusCondition) : searchCondition;
+    
     return {
       products: await db
         .select()
         .from(products)
-        .where(ilike(products.name, `%${search}%`))
+        .where(whereCondition)
         .limit(1000),
       newOffset: null,
       totalProducts: 0
@@ -56,8 +61,22 @@ export async function getProducts(
     return { products: [], newOffset: null, totalProducts: 0 };
   }
 
-  let totalProducts = await db.select({ count: count() }).from(products);
-  let moreProducts = await db.select().from(products).limit(5).offset(offset);
+  // Get total count with status filter
+  let totalProducts;
+  if (status) {
+    totalProducts = await db.select({ count: count() }).from(products).where(eq(products.status, status));
+  } else {
+    totalProducts = await db.select({ count: count() }).from(products);
+  }
+
+  // Get products with status filter
+  let moreProducts;
+  if (status) {
+    moreProducts = await db.select().from(products).where(eq(products.status, status)).limit(5).offset(offset);
+  } else {
+    moreProducts = await db.select().from(products).limit(5).offset(offset);
+  }
+  
   let newOffset = moreProducts.length >= 5 ? offset + 5 : null;
 
   return {
