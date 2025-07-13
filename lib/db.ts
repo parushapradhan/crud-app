@@ -70,3 +70,32 @@ export async function getProducts(
 export async function deleteProductById(id: number) {
   await db.delete(products).where(eq(products.id, id));
 }
+
+export async function getProductById(id: number): Promise<SelectProduct | null> {
+  const result = await db.select().from(products).where(eq(products.id, id));
+  return result[0] || null;
+}
+
+export async function updateProductById(
+  id: number,
+  data: {
+    name: string;
+    price: string;
+    stock: number;
+    status: 'active' | 'inactive' | 'archived';
+    imageUrl: string;
+    availableAt: Date;
+  }
+) {
+  await db
+    .update(products)
+    .set({
+      name: data.name,
+      price: data.price,
+      stock: data.stock,
+      status: data.status,
+      imageUrl: data.imageUrl,
+      availableAt: data.availableAt
+    })
+    .where(eq(products.id, id));
+}
