@@ -99,3 +99,21 @@ export async function updateProductById(
     })
     .where(eq(products.id, id));
 }
+
+export async function insertProduct(data: {
+  name: string;
+  price: string;
+  stock: number;
+  status: 'active' | 'inactive' | 'archived';
+  imageUrl: string;
+  availableAt: Date;
+}) {
+  await db.insert(products).values({
+    name: data.name,
+    price: data.price,
+    stock: data.stock,
+    status: data.status,
+    imageUrl: data.imageUrl,
+    availableAt: data.availableAt
+  });
+}

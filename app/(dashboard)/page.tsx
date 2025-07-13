@@ -1,7 +1,8 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { File, PlusCircle } from 'lucide-react';
+import { File } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ProductsTable } from './products-table';
+import { AddProductForm } from './add-product-form';
 import { getProducts } from '@/lib/db';
 
 export default async function ProductsPage(
@@ -35,12 +36,7 @@ export default async function ProductsPage(
               Export
             </span>
           </Button>
-          <Button size="sm" className="h-8 gap-1">
-            <PlusCircle className="h-3.5 w-3.5" />
-            <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-              Add Product
-            </span>
-          </Button>
+          <AddProductForm />
         </div>
       </div>
       <TabsContent value="all">
