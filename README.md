@@ -19,7 +19,7 @@ https://www.loom.com/share/b5e0b0096e984a82bdabb0284cf42985?sid=3d0bd6f6-d2ca-46
 
 This project is using the following stack:
 
-- Framework - [Next.js (App Router)](https://nextjs.org)
+- Framework - [Next.js](https://nextjs.org)
 - Language - [TypeScript](https://www.typescriptlang.org)
 - Database - [Postgres](https://vercel.com/postgres)
 - Database Hosting - [Neon](https://neon.com/)
