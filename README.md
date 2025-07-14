@@ -1,34 +1,48 @@
-<div align="center"><strong>Next.js 15 Admin Dashboard Template</strong></div>
+<div align="center"><strong>Products Admin Dashboard</strong></div>
 <div align="center">Built with the Next.js App Router</div>
 <br />
 <div align="center">
-<a href="https://next-admin-dash.vercel.app/">Demo</a>
+<a href="https://crud-app-eta-two.vercel.app/?tab=all">Demo</a>
 <span> · </span>
-<a href="https://vercel.com/templates/next.js/admin-dashboard-tailwind-postgres-react-nextjs">Clone & Deploy</a>
+
 <span>
 </div>
 
 ## Overview
+https://www.loom.com/share/b5e0b0096e984a82bdabb0284cf42985?sid=3d0bd6f6-d2ca-46e0-bc0d-ea63ad07faf4
 
-This is a starter template using the following stack:
+## Features:
+- Create, Read, Update, Delete products
+- Form validation for product fields
+- Filter and view products by status
+-  Search Items
+
+
+This project is using the following stack:
 
 - Framework - [Next.js (App Router)](https://nextjs.org)
 - Language - [TypeScript](https://www.typescriptlang.org)
-- Auth - [Auth.js](https://authjs.dev)
 - Database - [Postgres](https://vercel.com/postgres)
 - Deployment - [Vercel](https://vercel.com/docs/concepts/next.js/overview)
 - Styling - [Tailwind CSS](https://tailwindcss.com)
 - Components - [Shadcn UI](https://ui.shadcn.com/)
-- Analytics - [Vercel Analytics](https://vercel.com/analytics)
-- Formatting - [Prettier](https://prettier.io)
 
-This template uses the new Next.js App Router. This includes support for enhanced layouts, colocation of components, tests, and styles, component-level data fetching, and more.
 
 ## Getting Started
 
-During the deployment, Vercel will prompt you to create a new Postgres database. This will add the necessary environment variables to your project.
 
-Inside the Vercel Postgres dashboard, create a table based on the schema defined in this repository.
+### Key Directories Explained:
+
+- **`app/`** – Main app pages and API routes .  
+- **`components/`** – Reusable UI components like forms, tables, badges.  
+- **`lib/`** – Database setup and validation logic.  
+- **`public/`** – Static files served directly.  
+- **`.env.example`** – Template for required environment variables.  
+
+Copy the `.env.example` file to `.env` and update the values of POSTGRES_URL to your postgres database url
+
+
+Create a table based on the schema defined in this repository.
 
 ```
 CREATE TYPE status AS ENUM ('active', 'inactive', 'archived');
@@ -46,13 +60,7 @@ CREATE TABLE products (
 
 Then, uncomment `app/api/seed.ts` and hit `http://localhost:3000/api/seed` to seed the database with products.
 
-Next, copy the `.env.example` file to `.env` and update the values. Follow the instructions in the `.env.example` file to set up your GitHub OAuth application.
 
-```bash
-npm i -g vercel
-vercel link
-vercel env pull
-```
 
 Finally, run the following commands to start the development server:
 
