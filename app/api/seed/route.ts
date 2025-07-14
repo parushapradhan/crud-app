@@ -3,9 +3,12 @@ import { db, products } from 'lib/db';
 export const dynamic = 'force-dynamic';
 
 export async function GET() {
+    // Clear existing data first
+    await db.delete(products);
+    
+    // Insert new data without hardcoded IDs
     await db.insert(products).values([
     {
-      id: 1,
       imageUrl:
         'https://uwja77bygk2kgfqe.public.blob.vercel-storage.com/smartphone-gaPvyZW6aww0IhD3dOpaU6gBGILtcJ.webp',
       name: 'Smartphone X Pro',
@@ -15,7 +18,6 @@ export async function GET() {
       availableAt: new Date()
     },
     {
-      id: 2,
       imageUrl:
         'https://uwja77bygk2kgfqe.public.blob.vercel-storage.com/earbuds-3rew4JGdIK81KNlR8Edr8NBBhFTOtX.webp',
       name: 'Wireless Earbuds Ultra',
@@ -25,7 +27,6 @@ export async function GET() {
       availableAt: new Date()
     },
     {
-      id: 3,
       imageUrl:
         'https://uwja77bygk2kgfqe.public.blob.vercel-storage.com/home-iTeNnmKSMnrykOS9IYyJvnLFgap7Vw.webp',
       name: 'Smart Home Hub',
@@ -35,7 +36,6 @@ export async function GET() {
       availableAt: new Date()
     },
     {
-      id: 4,
       imageUrl:
         'https://uwja77bygk2kgfqe.public.blob.vercel-storage.com/tv-H4l26crxtm9EQHLWc0ddrsXZ0V0Ofw.webp',
       name: '4K Ultra HD Smart TV',
@@ -45,7 +45,6 @@ export async function GET() {
       availableAt: new Date()
     },
     {
-      id: 5,
       imageUrl:
         'https://uwja77bygk2kgfqe.public.blob.vercel-storage.com/laptop-9bgUhjY491hkxiMDeSgqb9R5I3lHNL.webp',
       name: 'Gaming Laptop Pro',
@@ -55,7 +54,6 @@ export async function GET() {
       availableAt: new Date()
     },
     {
-      id: 6,
       imageUrl:
         'https://uwja77bygk2kgfqe.public.blob.vercel-storage.com/headset-lYnRnpjDbZkB78lS7nnqEJFYFAUDg6.webp',
       name: 'VR Headset Plus',
@@ -65,7 +63,6 @@ export async function GET() {
       availableAt: new Date()
     },
     {
-      id: 7,
       imageUrl:
         'https://uwja77bygk2kgfqe.public.blob.vercel-storage.com/watch-S2VeARK6sEM9QFg4yNQNjHFaHc3sXv.webp',
       name: 'Smartwatch Elite',
@@ -75,7 +72,6 @@ export async function GET() {
       availableAt: new Date()
     },
     {
-      id: 8,
       imageUrl:
         'https://uwja77bygk2kgfqe.public.blob.vercel-storage.com/speaker-4Zk0Ctx5AvxnwNNTFWVK4Gtpru4YEf.webp',
       name: 'Bluetooth Speaker Max',
@@ -85,7 +81,6 @@ export async function GET() {
       availableAt: new Date()
     },
     {
-      id: 9,
       imageUrl:
         'https://uwja77bygk2kgfqe.public.blob.vercel-storage.com/charger-GzRr0NSkCj0ZYWkTMvxXGZQu47w9r5.webp',
       name: 'Portable Charger Super',
@@ -95,7 +90,6 @@ export async function GET() {
       availableAt: new Date()
     },
     {
-      id: 10,
       imageUrl:
         'https://uwja77bygk2kgfqe.public.blob.vercel-storage.com/thermostat-8GnK2LDE3lZAjUVtiBk61RrSuqSTF7.webp',
       name: 'Smart Thermostat Pro',
@@ -106,8 +100,6 @@ export async function GET() {
     }
   ]);
   return Response.json({
-    message: 'Uncomment to seed data after DB is set up.'
+    message: 'Data seeded successfully!'
   });
-
-
 }

@@ -11,7 +11,7 @@ import {
   pgEnum,
   serial
 } from 'drizzle-orm/pg-core';
-import { count, eq, ilike, and, asc } from 'drizzle-orm';
+import { count, eq, ilike, and, asc, sql } from 'drizzle-orm';
 import { createInsertSchema } from 'drizzle-zod';
 
 export const db = drizzle(neon(process.env.POSTGRES_URL!));
@@ -128,12 +128,32 @@ export async function insertProduct(data: {
   imageUrl: string;
   availableAt: Date;
 }) {
-  await db.insert(products).values({
-    name: data.name,
-    price: data.price,
-    stock: data.stock,
-    status: data.status,
-    imageUrl: data.imageUrl,
-    availableAt: data.availableAt
-  });
+  try {
+    await db.insert(products).values({
+      name: data.name,
+      price: data.price,
+      stock: data.stock,
+      status: data.status,
+      imageUrl: data.imageUrl,
+      availableAt: data.availableAt
+    });
+  } catch (error) {
+    // If there's a sequence conflict, reset the sequence and try again
+    if (error instanceof Error && error.message.includes('duplicate key')) {
+      // Reset the sequence to the maximum ID + 1
+      await db.execute(sql`SELECT setval('products_id_seq', (SELECT MAX(id) FROM products) + 1, false)`);
+      
+      // Try inserting again
+      await db.insert(products).values({
+        name: data.name,
+        price: data.price,
+        stock: data.stock,
+        status: data.status,
+        imageUrl: data.imageUrl,
+        availableAt: data.availableAt
+      });
+    } else {
+      throw error;
+    }
+  }
 }
