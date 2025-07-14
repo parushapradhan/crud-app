@@ -1,9 +1,8 @@
 <div align="center"><strong>Products Admin Dashboard</strong></div>
-<div align="center">Built with the Next.js App Router</div>
 <br />
 <div align="center">
 <a href="https://crud-app-eta-two.vercel.app/?tab=all">Demo</a>
-<span> · </span>
+
 
 <span>
 </div>
